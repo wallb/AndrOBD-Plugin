@@ -37,7 +37,12 @@ public class SensorProvider
 	{
 		ACC_X("m/s²", -9.81, 9.81),
 		ACC_Y("m/s²", -9.81, 9.81),
-		ACC_Z("m/s²", -9.81, 9.81);
+		ACC_Z("m/s²", -9.81, 9.81),
+
+		/** The gyroscope measures the rate of rotation in rad/s around a device's x, y, and z axis. */
+		GYRO_X("rad/s", -5, 5),
+		GYRO_Y("rad/s", -5, 5),
+		GYRO_Z("rad/s", -5, 5);
 
 		private String units;
 		private double min;
@@ -77,6 +82,12 @@ public class SensorProvider
 		// register change listener
 		if(mAccelerometer != null)
 			mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		// get gyro sensor
+		Sensor mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+		// register change listener
+		if(mGyroscope != null)
+			mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+
 	}
 
 	@Override
@@ -123,6 +134,12 @@ public class SensorProvider
 				sendDataUpdate(DataField.ACC_Y.name(), String.valueOf(event.values[1]));
 				sendDataUpdate(DataField.ACC_Z.name(), String.valueOf(event.values[2]));
 				break;
+			case Sensor.TYPE_GYROSCOPE:
+				sendDataUpdate(DataField.GYRO_X.name(), String.valueOf(event.values[0]));
+				sendDataUpdate(DataField.GYRO_Y.name(), String.valueOf(event.values[1]));
+				sendDataUpdate(DataField.GYRO_Z.name(), String.valueOf(event.values[2]));
+				break;
+
 		}
 	}
 
